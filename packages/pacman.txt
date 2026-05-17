@@ -51,12 +51,14 @@ libreoffice-fresh
 # Shell / CLI
 zsh
 git
+github-cli
 curl
 jq
 ripgrep
 fd
 fzf
 lf
+mc
 btop
 fastfetch
 file

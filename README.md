@@ -18,7 +18,7 @@ This repository is meant to be both a readable record of the system design and a
 | Editor | `neovim`, `clangd`, Treesitter, Telescope, completion, DAP base |
 | Desktop UI | `waybar`, `fuzzel`, `mako`, `kitty`, `wlogout`, `swaylock` |
 | Appearance | Catppuccin-like palette, `adw-gtk3-dark`, `Papirus-Dark`, `Adwaita` cursors |
-| Utilities | clipboard history, screenshots, wallpaper rotation |
+| Utilities | `lf`, `mc`, clipboard history, screenshots, wallpaper rotation |
 | Gaming | Steam, GameMode, MangoHud, Gamescope helpers |
 
 ## Repository layout

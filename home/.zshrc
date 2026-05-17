@@ -1,5 +1,6 @@
 export EDITOR="nvim"
 export VISUAL="nvim"
+export MC_SKIN="nicedark"
 export PATH="$HOME/.local/bin:$PATH"
 
 # Enable Powerlevel10k instant prompt. Keep this near the top of ~/.zshrc.
