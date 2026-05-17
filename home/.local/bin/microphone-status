@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+status="$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@)"
+
+if [[ "$status" == *"[MUTED]"* ]]; then
+    printf '{"text":"󰍭 muted","tooltip":"Microphone muted","class":"muted"}\n'
+else
+    printf '{"text":"󰍬 live","tooltip":"Microphone enabled","class":"live"}\n'
+fi

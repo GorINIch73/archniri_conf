@@ -1,0 +1,15 @@
+font=JetBrainsMono Nerd Font
+font-size=18
+color=000000
+indicator-radius=110
+indicator-thickness=8
+inside-color=1e1e2eff
+ring-color=cba6f7ff
+key-hl-color=f5c2e7ff
+bs-hl-color=f38ba8ff
+separator-color=00000000
+text-color=cdd6f4ff
+inside-ver-color=1e1e2eff
+ring-ver-color=89b4faff
+inside-wrong-color=1e1e2eff
+ring-wrong-color=f38ba8ff

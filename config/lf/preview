@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+file="$1"
+width="${2:-80}"
+height="${3:-40}"
+
+case "$(file --mime-type -Lb "$file")" in
+  text/*|application/json|application/xml)
+    bat --color=always --style=plain --paging=never --line-range ":$height" "$file"
+    ;;
+  image/*)
+    identify "$file" 2>/dev/null || file "$file"
+    ;;
+  video/*|audio/*)
+    mediainfo "$file"
+    ;;
+  application/pdf)
+    file "$file"
+    ;;
+  *)
+    file "$file"
+    ;;
+esac
+

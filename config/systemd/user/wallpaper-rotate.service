@@ -1,0 +1,8 @@
+[Unit]
+Description=Rotate wallpaper with awww
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/next-wallpaper
+

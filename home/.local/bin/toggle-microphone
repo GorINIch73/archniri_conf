@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
+
+status="$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@)"
+
+if [[ "$status" == *"[MUTED]"* ]]; then
+    notify-send \
+        --app-name="Microphone" \
+        --hint=string:x-canonical-private-synchronous:microphone \
+        "Микрофон выключен"
+else
+    notify-send \
+        --app-name="Microphone" \
+        --hint=string:x-canonical-private-synchronous:microphone \
+        --category="microphone-on" \
+        "Микрофон включён"
+fi
+
+pkill -RTMIN+8 waybar 2>/dev/null || true

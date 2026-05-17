@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+exec env MANGOHUD=1 gamemoderun steam "$@"
+

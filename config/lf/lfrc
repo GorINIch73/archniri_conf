@@ -1,0 +1,46 @@
+set hidden true
+set icons true
+set preview true
+set drawbox true
+set ratios 1:2:3
+set scrolloff 8
+set info size:time
+set shellopts '-eu'
+
+set previewer ~/.config/lf/preview
+set cleaner ~/.config/lf/cleaner
+
+cmd open ${{
+    case "$(file --mime-type -Lb "$f")" in
+        text/*|application/json|application/xml)
+            nvim "$f"
+            ;;
+        image/*)
+            imv "$f" >/dev/null 2>&1 &
+            ;;
+        video/*|audio/*)
+            mpv "$f" >/dev/null 2>&1 &
+            ;;
+        application/pdf)
+            xdg-open "$f" >/dev/null 2>&1 &
+            ;;
+        *)
+            xdg-open "$f" >/dev/null 2>&1 &
+            ;;
+    esac
+}}
+
+cmd edit $nvim "$f"
+cmd mkdir %{{
+    printf "Directory name: "
+    read -r dir
+    mkdir -p "$dir"
+}}
+
+map ee edit
+map md mkdir
+map gh cd ~
+map gd cd ~/Downloads
+map gp cd ~/Pictures
+map gc cd ~/.config
+

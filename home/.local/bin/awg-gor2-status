@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -d /sys/class/net/gor2 ]]; then
+    printf '{"text":"󰦝 VPN on","tooltip":"AmneziaWG gor2 connected","class":"connected"}\n'
+else
+    printf '{"text":"󰦞 VPN off","tooltip":"AmneziaWG gor2 disconnected","class":"disconnected"}\n'
+fi

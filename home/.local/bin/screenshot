@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCREENSHOT_DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$SCREENSHOT_DIR"
+
+timestamp="$(date +%Y-%m-%d_%H-%M-%S)"
+file="$SCREENSHOT_DIR/Screenshot_${timestamp}.png"
+
+case "${1:-full}" in
+  full)
+    grim "$file"
+    ;;
+  area)
+    grim -g "$(slurp)" "$file"
+    ;;
+  copy-area)
+    grim -g "$(slurp)" -t png - | wl-copy -t image/png
+    ;;
+  *)
+    printf 'Usage: %s {full|area|copy-area}\n' "$0" >&2
+    exit 1
+    ;;
+esac
+

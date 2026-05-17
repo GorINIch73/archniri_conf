@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Downloads/Wallpapers}"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper"
+STATE_FILE="$STATE_DIR/current"
+
+mapfile -d '' WALLPAPERS < <(
+    find "$WALLPAPER_DIR" -type f \
+        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.gif' \) \
+        -print0 2>/dev/null
+)
+
+if (( ${#WALLPAPERS[@]} == 0 )); then
+    printf 'No wallpapers found in %s\n' "$WALLPAPER_DIR" >&2
+    exit 1
+fi
+
+mkdir -p "$STATE_DIR"
+
+current=""
+if [[ -f "$STATE_FILE" ]]; then
+    current="$(<"$STATE_FILE")"
+fi
+
+next="${WALLPAPERS[RANDOM % ${#WALLPAPERS[@]}]}"
+
+if (( ${#WALLPAPERS[@]} > 1 )); then
+    while [[ "$next" == "$current" ]]; do
+        next="${WALLPAPERS[RANDOM % ${#WALLPAPERS[@]}]}"
+    done
+fi
+
+awww img "$next" \
+    --resize fit \
+    --transition-type fade \
+    --transition-duration 1.2 \
+    --transition-fps 60
+
+printf '%s\n' "$next" > "$STATE_FILE"

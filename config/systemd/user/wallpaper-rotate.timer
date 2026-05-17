@@ -1,0 +1,11 @@
+[Unit]
+Description=Rotate wallpaper every 5 minutes
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=5min
+Unit=wallpaper-rotate.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

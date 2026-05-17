@@ -1,0 +1,190 @@
+input {
+    keyboard {
+        xkb {
+            layout "us,ru"
+            options "grp:win_space_toggle,compose:ralt,ctrl:nocaps"
+        }
+        numlock
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+    }
+}
+
+// Machine-local overrides: outputs, laptop-specific input tweaks, etc.
+include optional=true "local.kdl"
+
+workspace "browser"
+workspace "chat"
+workspace "games"
+
+layout {
+    gaps 14
+    center-focused-column "on-overflow"
+    default-column-width { proportion 0.5; }
+
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    focus-ring {
+        width 2
+        active-gradient from="#cba6f7" to="#89b4fa" angle=45
+        inactive-color "#585b70"
+    }
+
+    border {
+        off
+    }
+
+    shadow {
+        on
+        softness 24
+        spread 4
+        offset x=0 y=4
+        color "#0008"
+    }
+}
+
+spawn-at-startup "waybar"
+spawn-at-startup "mako"
+spawn-at-startup "awww-daemon"
+spawn-at-startup "nm-applet"
+spawn-at-startup "swayidle" "-w" "timeout" "600" "swaylock -f"
+spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
+spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
+spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+spawn-at-startup "google-chrome-stable"
+spawn-at-startup "discord"
+
+prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+window-rule {
+    geometry-corner-radius 16
+    clip-to-geometry true
+}
+
+window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"^org\.pulseaudio\.pavucontrol$"#
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"^(org\.gnome\.Nautilus|thunar)$"#
+    default-column-width { proportion 0.4; }
+}
+
+window-rule {
+    match app-id=r#"^discord$"#
+    default-column-width { proportion 0.5; }
+}
+
+window-rule {
+    match at-startup=true app-id=r#"^google-chrome$"#
+    open-on-workspace "browser"
+    open-maximized true
+}
+
+window-rule {
+    match at-startup=true app-id=r#"^discord$"#
+    open-on-workspace "chat"
+}
+
+window-rule {
+    match app-id=r#"^steam$"#
+    open-maximized true
+}
+
+window-rule {
+    match at-startup=true app-id=r#"^steam$"#
+    open-on-workspace "games"
+}
+
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+    Mod+Return { spawn "kitty"; }
+    Mod+D { spawn "fuzzel"; }
+    Mod+B { spawn "firefox"; }
+    Mod+Shift+B { spawn "google-chrome-stable"; }
+    Mod+Shift+D { spawn "discord"; }
+    Mod+T { spawn-sh "$HOME/.local/bin/next-wallpaper"; }
+    Mod+P { spawn-sh "$HOME/.local/bin/clipboard-picker"; }
+    Mod+Shift+E { spawn "wlogout"; }
+    Super+Alt+L { spawn "swaylock"; }
+
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ -l 1.0"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }
+    XF86AudioMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn-sh "$HOME/.local/bin/toggle-microphone"; }
+    Pause allow-when-locked=true { spawn-sh "$HOME/.local/bin/toggle-microphone"; }
+    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "set" "+10%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "set" "10%-"; }
+
+    Print { spawn-sh "$HOME/.local/bin/screenshot full"; }
+    Shift+Print { spawn-sh "$HOME/.local/bin/screenshot area"; }
+    Ctrl+Print { spawn-sh "$HOME/.local/bin/screenshot copy-area"; }
+
+    Mod+Q repeat=false { close-window; }
+    Mod+O repeat=false { toggle-overview; }
+
+    Mod+H { focus-column-left; }
+    Mod+J { focus-window-down; }
+    Mod+K { focus-window-up; }
+    Mod+L { focus-column-right; }
+    Mod+Left { focus-column-left; }
+    Mod+Down { focus-window-down; }
+    Mod+Up { focus-window-up; }
+    Mod+Right { focus-column-right; }
+
+    Mod+Ctrl+H { move-column-left; }
+    Mod+Ctrl+J { move-window-down; }
+    Mod+Ctrl+K { move-window-up; }
+    Mod+Ctrl+L { move-column-right; }
+    Mod+Ctrl+Left { move-column-left; }
+    Mod+Ctrl+Down { move-window-to-workspace-down; }
+    Mod+Ctrl+Up { move-window-to-workspace-up; }
+    Mod+Ctrl+Right { move-column-right; }
+
+    Mod+U { focus-workspace-down; }
+    Mod+I { focus-workspace-up; }
+    Mod+Ctrl+U { move-column-to-workspace-down; }
+    Mod+Ctrl+I { move-column-to-workspace-up; }
+
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+V { toggle-window-floating; }
+    Mod+C { center-column; }
+
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+Alt+B { focus-workspace "browser"; }
+    Mod+Alt+D { focus-workspace "chat"; }
+    Mod+Alt+G { focus-workspace "games"; }
+}

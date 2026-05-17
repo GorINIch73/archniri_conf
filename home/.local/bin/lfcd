@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+tmp="$(mktemp)"
+lf -last-dir-path="$tmp" "$@"
+
+if [[ -f "$tmp" ]]; then
+    dir="$(cat "$tmp")"
+    rm -f "$tmp"
+    if [[ -d "$dir" ]]; then
+        printf '%s\n' "$dir"
+    fi
+fi
+

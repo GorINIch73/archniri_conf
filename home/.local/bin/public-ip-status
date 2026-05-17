@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+fetch_json() {
+    local url="$1"
+    curl --connect-timeout 3 --max-time 5 --silent --show-error --fail "$url" 2>/dev/null || true
+}
+
+response="$(fetch_json 'https://ipwho.is/')"
+provider='ipwho.is'
+
+if [[ -z "$response" ]] || ! jq -e '.success == true' >/dev/null 2>&1 <<<"$response"; then
+    response="$(fetch_json 'http://ip-api.com/json/?fields=status,message,query,city,regionName,country,isp')"
+    provider='ip-api.com'
+    if [[ -z "$response" ]] || ! jq -e '.status == "success"' >/dev/null 2>&1 <<<"$response"; then
+        response="$(fetch_json 'https://api.ipify.org?format=json')"
+        provider='ipify.org'
+    fi
+fi
+
+if [[ -z "$response" ]]; then
+    printf '{"text":"󰖪 offline","tooltip":"Unable to resolve public IP","class":"offline"}\n'
+    exit 0
+fi
+
+case "$provider" in
+    ipwho.is)
+        printf '%s' "$response" | jq -c '
+          if .success then
+            {
+              text: ("󰖟 " + .ip),
+              tooltip: (
+                "Public IP: " + .ip
+                + "\nLocation: " + ([.city, .region, .country] | map(select(. != null and . != "")) | join(", "))
+                + (if .connection.org then "\nProvider: " + .connection.org else "" end)
+              ),
+              class: "online"
+            }
+          else
+            {
+              text: "󰖪 unavailable",
+              tooltip: (.message // "Public IP lookup unavailable"),
+              class: "offline"
+            }
+          end
+        '
+        ;;
+    ip-api.com)
+        printf '%s' "$response" | jq -c '
+          if .status == "success" then
+            {
+              text: ("󰖟 " + .query),
+              tooltip: (
+                "Public IP: " + .query
+                + "\nLocation: " + ([.city, .regionName, .country] | map(select(. != null and . != "")) | join(", "))
+                + (if .isp then "\nProvider: " + .isp else "" end)
+              ),
+              class: "online"
+            }
+          else
+            {
+              text: "󰖪 unavailable",
+              tooltip: (.message // "Public IP lookup unavailable"),
+              class: "offline"
+            }
+          end
+        '
+        ;;
+    ipify.org)
+        printf '%s' "$response" | jq -c '
+          if .ip then
+            {
+              text: ("󰖟 " + .ip),
+              tooltip: ("Public IP: " + .ip),
+              class: "online"
+            }
+          else
+            {
+              text: "󰖪 unavailable",
+              tooltip: "Public IP lookup unavailable",
+              class: "offline"
+            }
+          end
+        '
+        ;;
+esac

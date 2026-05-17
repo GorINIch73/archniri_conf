@@ -1,0 +1,10 @@
+// Copy this file to ~/.config/niri/local.kdl for machine-specific settings.
+//
+// Example:
+//
+// output "DP-5" {
+//     mode "3440x1440@164.999"
+//     scale 1
+//     transform "normal"
+//     position x=0 y=0
+// }

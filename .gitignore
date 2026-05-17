@@ -1,0 +1,23 @@
+# Machine-local overrides
+config/niri/local.kdl
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+.codex
+.agents
+
+# Logs and temporary files
+*.log
+tmp/
+temp/
