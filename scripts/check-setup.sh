@@ -35,8 +35,13 @@ done
 
 echo
 echo "Wallpaper rotation"
-if systemctl --user is-enabled wallpaper-rotate.timer >/dev/null 2>&1; then
+timer_state="$(systemctl --user is-enabled wallpaper-rotate.timer 2>&1)" || timer_status=$?
+timer_status="${timer_status:-0}"
+
+if [[ "$timer_status" -eq 0 ]]; then
     ok "wallpaper-rotate.timer enabled"
+elif grep -qi "Failed to connect to user scope bus" <<<"$timer_state"; then
+    printf 'unknown %s\n' "wallpaper-rotate.timer (user systemd bus unavailable)"
 else
     warn "wallpaper-rotate.timer not enabled"
 fi

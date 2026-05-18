@@ -108,6 +108,18 @@ Start from `config/niri/local.kdl.example` when needed. Good candidates for mach
 - laptop-only input tweaks
 - per-machine autostart commands
 
+### Monitor setup
+
+Keep monitor-specific `output` blocks in `~/.config/niri/local.kdl`, not in the shared `config.kdl`.
+
+1. Run `niri msg outputs` and note the real connector name, current mode, scale, transform, and position.
+2. Copy `config/niri/local.kdl.example` to `~/.config/niri/local.kdl`.
+3. Replace the example connector and values with the ones for this machine.
+4. Reload niri with `niri msg action load-config-file`.
+5. Run `niri msg outputs` again and confirm that the active output shows the expected connector, mode, scale, transform, and position.
+
+If an `output` block targets the wrong connector name, niri simply does not apply it, so checking the second `niri msg outputs` result is part of the setup rather than optional cleanup.
+
 ## Current intentional choices
 
 - The desktop is **Catppuccin-like**, not a strict full Catppuccin port everywhere.

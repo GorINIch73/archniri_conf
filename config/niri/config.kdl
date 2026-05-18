@@ -14,6 +14,11 @@ input {
 }
 
 // Machine-local overrides: outputs, laptop-specific input tweaks, etc.
+// Keep monitor-specific output blocks in local.kdl rather than this shared file.
+// After changing them:
+//   niri msg action load-config-file
+//   niri msg outputs
+// Verify that the active connector, mode, scale, transform, and position match.
 include optional=true "local.kdl"
 
 workspace "browser"

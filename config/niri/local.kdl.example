@@ -1,4 +1,9 @@
 // Copy this file to ~/.config/niri/local.kdl for machine-specific settings.
+// Use `niri msg outputs` to find the real connector name and current values.
+// After editing, run:
+//   niri msg action load-config-file
+//   niri msg outputs
+// Then verify that the active output reports the expected values.
 //
 // Example:
 //
