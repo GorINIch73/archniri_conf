@@ -104,16 +104,6 @@ window-rule {
     open-on-workspace "chat"
 }
 
-window-rule {
-    match app-id=r#"^steam$"#
-    open-maximized true
-}
-
-window-rule {
-    match at-startup=true app-id=r#"^steam$"#
-    open-on-workspace "games"
-}
-
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
