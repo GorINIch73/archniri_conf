@@ -55,4 +55,5 @@ fi
 echo
 echo "Notes"
 echo "- Steam launch profiles: docs/gaming.md"
+echo "- Optional laptop setup: scripts/setup-laptop.sh"
 echo "- Full checklist: docs/post-install.md"

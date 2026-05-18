@@ -20,6 +20,7 @@ This repository is meant to be both a readable record of the system design and a
 | Appearance | Catppuccin-like palette, `adw-gtk3-dark`, `Papirus-Dark`, `Adwaita` cursors |
 | Utilities | `lf`, `mc`, clipboard history, screenshots, wallpaper rotation |
 | Gaming | Steam, GameMode, MangoHud, Gamescope helpers |
+| Optional laptop extras | Battery status, UPower, power profile control |
 
 ## Repository layout
 
@@ -52,6 +53,9 @@ The root setup script runs the full initial flow:
 | `check-setup.sh` | Prints a quick health report for the configured workstation |
 
 It also creates `~/Downloads/Wallpapers`, reloads user systemd units, and enables `wallpaper-rotate.timer`.
+It also enables the per-user `syncthing.service`, so Syncthing starts automatically after login. Open the local web UI at `http://127.0.0.1:8384`.
+
+During setup, the script asks whether to install optional laptop extras. If selected, it runs `scripts/setup-laptop.sh`, installs laptop-specific packages, switches Waybar to the laptop profile, and enables `power-profiles-daemon`.
 
 ## First login checklist
 
@@ -61,6 +65,28 @@ After linking configs and logging into niri:
 2. Restart the shell or open a new terminal so Powerlevel10k loads.
 3. Open Neovim once and let plugins install.
 4. In Steam, add per-game launch options as needed from [`docs/gaming.md`](docs/gaming.md).
+
+## Optional laptop profile
+
+For a laptop install, answer `y` when `setup.sh` asks about laptop extras, or run this later:
+
+```bash
+./scripts/setup-laptop.sh
+```
+
+That profile:
+
+- installs `power-profiles-daemon` and `upower`
+- switches Waybar from `config.jsonc` to `config.laptop.jsonc`
+- adds battery status and the active power profile to the bar
+- enables the system power-profile service
+
+Inspect or change the active profile with:
+
+```bash
+powerprofilesctl
+powerprofilesctl set power-saver
+```
 ## Daily key bindings
 
 | Binding | Action |

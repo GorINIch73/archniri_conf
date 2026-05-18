@@ -23,7 +23,8 @@
 
 ## Waybar choices
 
-- Battery is intentionally omitted for the current desktop setup.
+- The desktop Waybar profile intentionally omits battery and power-profile modules.
+- The optional laptop profile adds battery status and the active power profile.
 - Clicking the volume module opens `pavucontrol`.
 - The microphone module shows `live` / `muted`; clicking it toggles the default input device.
 - The public-IP module shows the current external IP; its tooltip includes approximate location/provider data from `ipapi.co`, and clicking it refreshes the lookup.

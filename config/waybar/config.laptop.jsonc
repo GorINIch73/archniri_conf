@@ -1,0 +1,95 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 34,
+  "spacing": 8,
+  "modules-left": ["niri/workspaces", "niri/window"],
+  "modules-center": ["clock"],
+  "modules-right": ["tray", "pulseaudio", "custom/microphone", "niri/language", "network", "battery", "power-profiles-daemon", "custom/public-ip", "custom/awg-gor2", "cpu", "temperature#cpu", "temperature#gpu", "memory", "disk", "custom/power"],
+  "niri/workspaces": {
+    "format": "{index}"
+  },
+  "clock": {
+    "format": "{:%a %d %b  %H:%M}"
+  },
+  "pulseaudio": {
+    "format": "  {volume}%",
+    "format-muted": "󰝟 muted",
+    "on-click": "pavucontrol"
+  },
+  "custom/microphone": {
+    "exec": "$HOME/.local/bin/microphone-status",
+    "return-type": "json",
+    "interval": 2,
+    "signal": 8,
+    "on-click": "$HOME/.local/bin/toggle-microphone"
+  },
+  "niri/language": {
+    "format": "  {short}",
+    "tooltip": false
+  },
+  "network": {
+    "format-wifi": "  {signalStrength}%",
+    "format-ethernet": "󰈀 wired",
+    "format-disconnected": "󰖪 offline"
+  },
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{capacity}% {icon}",
+    "format-charging": "{capacity}% 󰂄",
+    "format-plugged": "{capacity}% ",
+    "format-full": "{capacity}% ",
+    "format-icons": ["", "", "", "", ""]
+  },
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}",
+    "format-icons": {
+      "default": "",
+      "performance": "",
+      "balanced": "",
+      "power-saver": ""
+    }
+  },
+  "custom/public-ip": {
+    "exec": "$HOME/.local/bin/public-ip-status",
+    "return-type": "json",
+    "interval": 300,
+    "signal": 9,
+    "on-click": "pkill -RTMIN+9 waybar"
+  },
+  "custom/awg-gor2": {
+    "exec": "$HOME/.local/bin/awg-gor2-status",
+    "return-type": "json",
+    "interval": 2,
+    "signal": 10
+  },
+  "cpu": {
+    "format": "  {usage}%"
+  },
+  "temperature#cpu": {
+    "hwmon-path": "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon4/temp1_input",
+    "critical-threshold": 85,
+    "format": "  {temperatureC}°C"
+  },
+  "temperature#gpu": {
+    "hwmon-path": "/sys/devices/pci0000:00/0000:00:08.1/0000:71:00.0/hwmon/hwmon3/temp1_input",
+    "critical-threshold": 85,
+    "format": "󰢮  {temperatureC}°C"
+  },
+  "memory": {
+    "format": "  {percentage}%"
+  },
+  "disk": {
+    "path": "/",
+    "format": "󰋊  {percentage_used}%"
+  },
+  "custom/power": {
+    "format": "⏻",
+    "tooltip": false,
+    "on-click": "wlogout"
+  }
+}

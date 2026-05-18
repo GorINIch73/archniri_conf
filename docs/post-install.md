@@ -8,6 +8,12 @@
 - [ ] Confirm screen sharing works in the browser.
 - [ ] Put wallpapers into `~/Downloads/Wallpapers`.
 
+## Laptop extras
+
+- [ ] If this is a laptop, confirm the laptop profile was selected during setup or run `./scripts/setup-laptop.sh`.
+- [ ] Confirm Waybar shows battery status and the active power profile.
+- [ ] Confirm `powerprofilesctl` reports the expected active profile.
+
 ## Shell
 
 - [ ] Open a fresh terminal and confirm Powerlevel10k loads.

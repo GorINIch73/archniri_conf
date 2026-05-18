@@ -1,0 +1,4 @@
+# Laptop extras
+power-profiles-daemon
+upower
+

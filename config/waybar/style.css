@@ -31,6 +31,8 @@ window#waybar {
 #network,
 #custom-public-ip,
 #custom-awg-gor2,
+#battery,
+#power-profiles-daemon,
 #cpu,
 #temperature,
 #memory,
@@ -68,5 +70,13 @@ window#waybar {
 }
 
 #custom-awg-gor2.disconnected {
+  color: #f38ba8;
+}
+
+#battery.warning {
+  color: #f9e2af;
+}
+
+#battery.critical {
   color: #f38ba8;
 }
