@@ -55,6 +55,8 @@ The root setup script runs the full initial flow:
 It also creates `~/Downloads/Wallpapers`, reloads user systemd units, and enables `wallpaper-rotate.timer`.
 It also enables the per-user `syncthing.service`, so Syncthing starts automatically after login. Open the local web UI at `http://127.0.0.1:8384`.
 
+Packages that are not available in the enabled pacman repositories are tracked separately in `packages/aur.txt`.
+
 During setup, the script asks whether to install optional laptop extras. If selected, it runs `scripts/setup-laptop.sh`, installs laptop-specific packages, switches Waybar to the laptop profile, and enables `power-profiles-daemon`.
 
 ## First login checklist
@@ -100,6 +102,7 @@ powerprofilesctl set power-saver
 | `Super+Alt+D` | Focus chat workspace |
 | `Super+Alt+G` | Focus games workspace |
 | `Super+T` | Next wallpaper |
+| `Super+Shift+T` | Theme picker |
 | `Super+P` | Clipboard history |
 | `Super+Shift+E` | Logout menu |
 | `Super+Alt+L` | Lock screen |
@@ -107,6 +110,35 @@ powerprofilesctl set power-saver
 | `Print` | Full screenshot |
 | `Shift+Print` | Area screenshot |
 | `Ctrl+Print` | Area screenshot to clipboard |
+
+## Themes
+
+The desktop theme can be switched without editing individual config files:
+
+```bash
+theme-switch mocha
+theme-switch dracula colorful
+```
+
+Available themes: `mocha`, `graphite`, `rose`, `forest`, `nord`, `dracula`, `tokyo`, `gruvbox`, `solarized`.
+
+Waybar applets can stay calm or become more colorful:
+
+```bash
+theme-switch mocha calm
+theme-switch mocha colorful
+theme-switch graphite colorful
+```
+
+There is also a graphical picker:
+
+```bash
+theme-menu
+```
+
+In niri, open it with `Super+Shift+T`.
+
+The switcher updates Waybar, Kitty, fuzzel, mako, wlogout, swaylock, and GTK settings. `scripts/apply-appearance.sh` accepts the same theme name and defaults to `mocha calm`.
 
 ## Wallpaper rotation
 
@@ -152,6 +184,70 @@ If an `output` block targets the wrong connector name, niri simply does not appl
 - GTK uses `adw-gtk3-dark` for stability rather than a fragile themed override stack.
 - Gamescope is available through helpers and documented launch options, but is **not** forced globally for every Steam game.
 - The Neovim config is intentionally compact: IDE-grade basics first, personal refinements later.
+
+## Desktop app workarounds
+
+### Frozen Electron apps
+
+Discord is launched through:
+
+```text
+~/.local/bin/discord-stable
+```
+
+That wrapper starts Discord with GPU rendering disabled. It is intended for the common failure mode where Discord keeps running but the visible window stops repainting until it is closed and reopened from the tray.
+
+If the problem disappears permanently after upstream Electron/Discord/NVIDIA updates, switch `config/niri/config.kdl` back from `discord-stable` to `discord`.
+
+## Steam bugs
+
+### Steam crashes on startup in `libaudio.so`
+
+Symptom:
+
+- Steam verifies the installation, starts `steamwebhelper`, then exits.
+- `journalctl --user -b` shows `steam` dumping core in `steamui.so`.
+- `coredumpctl info <pid>` shows a stack through `libaudio.so` and `libpulse.so.0`.
+- `journalctl --user -b` may also show PipeWire/Pulse messages like:
+
+```text
+card 50 port 0 profiles inconsistent
+card 50 port 1 profiles inconsistent
+card 50 port 2 profiles inconsistent
+card 50 port 3 profiles inconsistent
+```
+
+On this machine, the bad card is NVIDIA HDMI audio:
+
+```text
+alsa_card.pci-0000_01_00.1
+GA104 High Definition Audio Controller
+```
+
+Fix: disable only that HDMI-audio card in WirePlumber. This repo ships the rule at:
+
+```text
+config/wireplumber/wireplumber.conf.d/51-disable-nvidia-hdmi-audio.conf
+```
+
+Apply linked configs and restart the user audio stack:
+
+```bash
+./scripts/link-dotfiles.sh
+systemctl --user restart wireplumber pipewire-pulse
+```
+
+Verify that the NVIDIA HDMI audio device is gone while USB audio remains:
+
+```bash
+wpctl status
+```
+
+Then launch Steam again:
+
+```bash
+steam
+```
 
 ## Next likely refinements
 

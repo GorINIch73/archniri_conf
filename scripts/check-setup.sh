@@ -9,7 +9,15 @@ has_cmd() {
 }
 
 echo "Commands"
-for cmd in niri waybar fuzzel mako kitty nvim clangd steam awww grim slurp cliphist wlogout swaylock wpctl notify-send; do
+for cmd in \
+    niri xwayland-satellite waybar fuzzel mako kitty nvim clangd steam awww \
+    grim slurp wl-copy wl-paste cliphist wlogout swaylock swayidle wpctl \
+    notify-send playerctl brightnessctl pavucontrol imv mpv zathura file \
+    mediainfo bat fd rg fzf jq curl pgrep gparted mkfs.fat mkfs.exfat \
+    wf-recorder \
+    localsend_app satty trash-put duf dust ncdu eza zoxide tldr just \
+    shellcheck shfmt
+do
     if has_cmd "$cmd"; then
         ok "$cmd"
     else
@@ -22,6 +30,10 @@ echo "Linked config"
 for path in \
     "$HOME/.config/niri/config.kdl" \
     "$HOME/.config/waybar/config.jsonc" \
+    "$HOME/.config/waybar/style.css" \
+    "$HOME/.config/fuzzel/fuzzel.ini" \
+    "$HOME/.config/mako/config" \
+    "$HOME/.config/kitty/kitty.conf" \
     "$HOME/.config/nvim/init.lua" \
     "$HOME/.zshrc" \
     "$HOME/.p10k.zsh"
@@ -32,6 +44,39 @@ do
         warn "$path"
     fi
 done
+
+echo
+echo "User scripts"
+for path in \
+    "$HOME/.local/bin/theme-switch" \
+    "$HOME/.local/bin/theme-menu" \
+    "$HOME/.local/bin/discord-stable" \
+    "$HOME/.local/bin/next-wallpaper" \
+    "$HOME/.local/bin/clipboard-picker" \
+    "$HOME/.local/bin/screenshot" \
+    "$HOME/.local/bin/microphone-status" \
+    "$HOME/.local/bin/toggle-microphone" \
+    "$HOME/.local/bin/public-ip-status" \
+    "$HOME/.local/bin/awg-gor2-status" \
+    "$HOME/.local/bin/lfcd"
+do
+    if [[ -x "$path" ]]; then
+        ok "$path"
+    else
+        warn "$path"
+    fi
+done
+
+echo
+echo "Theme switcher"
+if [[ -x "$HOME/.local/bin/theme-switch" ]]; then
+    printf 'themes  '
+    "$HOME/.local/bin/theme-switch" --list | paste -sd ' ' -
+    printf 'waybar  '
+    "$HOME/.local/bin/theme-switch" --modes | paste -sd ' ' -
+else
+    warn "theme-switch unavailable"
+fi
 
 echo
 echo "Wallpaper rotation"
@@ -54,6 +99,8 @@ fi
 
 echo
 echo "Notes"
+echo "- Switch theme: theme-menu or theme-switch <theme> [calm|colorful]"
+echo "- Discord launcher uses discord-stable to avoid frozen Electron frames"
 echo "- Steam launch profiles: docs/gaming.md"
 echo "- Optional laptop setup: scripts/setup-laptop.sh"
 echo "- Full checklist: docs/post-install.md"

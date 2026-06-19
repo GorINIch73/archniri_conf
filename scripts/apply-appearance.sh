@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
-gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
-gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark'
-gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita'
-gsettings set org.gnome.desktop.interface cursor-size 24
-gsettings set org.gnome.desktop.interface font-name 'Noto Sans 11'
-gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 11'
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+theme="${1:-mocha}"
+waybar_mode="${2:-calm}"
 
-echo "Appearance settings applied."
-
+if command -v theme-switch >/dev/null 2>&1; then
+    theme-switch "$theme" "$waybar_mode"
+else
+    "$ROOT_DIR/home/.local/bin/theme-switch" "$theme" "$waybar_mode"
+fi

@@ -1,0 +1,434 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="${1:-mocha}"
+waybar_mode="${2:-calm}"
+
+case "$waybar_mode" in
+    calm|colorful) ;;
+    *)
+        printf 'Unknown Waybar mode: %s\n' "$waybar_mode" >&2
+        printf 'Available Waybar modes: calm colorful\n' >&2
+        exit 1
+        ;;
+esac
+
+case "$theme" in
+    mocha)
+        name="Mocha"
+        bg="1e1e2e"; bg_rgba="rgba(30, 30, 46, 0.88)"
+        surface="313244"; surface2="45475a"; fg="cdd6f4"; muted="a6adc8"
+        accent="cba6f7"; accent2="89b4fa"; selection="f5e0dc"
+        red="f38ba8"; green="a6e3a1"; yellow="f9e2af"; cyan="94e2d5"; magenta="f5c2e7"
+        ;;
+    graphite)
+        name="Graphite"
+        bg="191a1f"; bg_rgba="rgba(25, 26, 31, 0.90)"
+        surface="2a2d35"; surface2="3a3f4b"; fg="e6e6e6"; muted="a5adba"
+        accent="7dd3fc"; accent2="c4b5fd"; selection="d8dee9"
+        red="fb7185"; green="86efac"; yellow="fbbf24"; cyan="67e8f9"; magenta="f0abfc"
+        ;;
+    rose)
+        name="Rose"
+        bg="221a1d"; bg_rgba="rgba(34, 26, 29, 0.90)"
+        surface="33252a"; surface2="4a343c"; fg="f6e7e9"; muted="c7a9b0"
+        accent="f4a7b9"; accent2="9ccfd8"; selection="ffe3ea"
+        red="f38ba8"; green="a3be8c"; yellow="f6c177"; cyan="9ccfd8"; magenta="c4a7e7"
+        ;;
+    forest)
+        name="Forest"
+        bg="17201a"; bg_rgba="rgba(23, 32, 26, 0.90)"
+        surface="243127"; surface2="35463a"; fg="e8efe6"; muted="a8b8aa"
+        accent="8fbf87"; accent2="d7ba7d"; selection="edf7e8"
+        red="e68183"; green="a7c080"; yellow="dbbc7f"; cyan="83c092"; magenta="d699b6"
+        ;;
+    nord)
+        name="Nord"
+        bg="2e3440"; bg_rgba="rgba(46, 52, 64, 0.90)"
+        surface="3b4252"; surface2="4c566a"; fg="eceff4"; muted="d8dee9"
+        accent="88c0d0"; accent2="81a1c1"; selection="e5e9f0"
+        red="bf616a"; green="a3be8c"; yellow="ebcb8b"; cyan="8fbcbb"; magenta="b48ead"
+        ;;
+    dracula)
+        name="Dracula"
+        bg="282a36"; bg_rgba="rgba(40, 42, 54, 0.90)"
+        surface="343746"; surface2="44475a"; fg="f8f8f2"; muted="b6b6c8"
+        accent="bd93f9"; accent2="8be9fd"; selection="f8f8f2"
+        red="ff5555"; green="50fa7b"; yellow="f1fa8c"; cyan="8be9fd"; magenta="ff79c6"
+        ;;
+    tokyo)
+        name="Tokyo"
+        bg="1a1b26"; bg_rgba="rgba(26, 27, 38, 0.90)"
+        surface="24283b"; surface2="414868"; fg="c0caf5"; muted="9aa5ce"
+        accent="7aa2f7"; accent2="2ac3de"; selection="c0caf5"
+        red="f7768e"; green="9ece6a"; yellow="e0af68"; cyan="7dcfff"; magenta="bb9af7"
+        ;;
+    gruvbox)
+        name="Gruvbox"
+        bg="282828"; bg_rgba="rgba(40, 40, 40, 0.90)"
+        surface="3c3836"; surface2="504945"; fg="ebdbb2"; muted="bdae93"
+        accent="fabd2f"; accent2="83a598"; selection="fbf1c7"
+        red="fb4934"; green="b8bb26"; yellow="fabd2f"; cyan="8ec07c"; magenta="d3869b"
+        ;;
+    solarized)
+        name="Solarized"
+        bg="002b36"; bg_rgba="rgba(0, 43, 54, 0.90)"
+        surface="073642"; surface2="586e75"; fg="eee8d5"; muted="93a1a1"
+        accent="268bd2"; accent2="2aa198"; selection="fdf6e3"
+        red="dc322f"; green="859900"; yellow="b58900"; cyan="2aa198"; magenta="d33682"
+        ;;
+    list|--list|-l)
+        printf '%s\n' mocha graphite rose forest nord dracula tokyo gruvbox solarized
+        exit 0
+        ;;
+    modes|--modes)
+        printf '%s\n' calm colorful
+        exit 0
+        ;;
+    *)
+        printf 'Unknown theme: %s\n' "$theme" >&2
+        printf 'Available themes: mocha graphite rose forest nord dracula tokyo gruvbox solarized\n' >&2
+        exit 1
+        ;;
+esac
+
+mkdir -p \
+    "$HOME/.config/waybar" \
+    "$HOME/.config/kitty" \
+    "$HOME/.config/fuzzel" \
+    "$HOME/.config/mako" \
+    "$HOME/.config/wlogout" \
+    "$HOME/.config/swaylock" \
+    "$HOME/.config/gtk-3.0" \
+    "$HOME/.config/gtk-4.0"
+
+cat >"$HOME/.config/waybar/style.css" <<EOF
+* {
+  font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+  font-size: 13px;
+  min-height: 0;
+}
+
+window#waybar {
+  background: ${bg_rgba};
+  color: #${fg};
+}
+
+#workspaces button {
+  color: #${muted};
+  background: transparent;
+  border-radius: 10px;
+  padding: 0 10px;
+  margin: 5px 2px;
+}
+
+#workspaces button.active {
+  color: #${bg};
+  background: #${accent};
+}
+
+#window,
+#clock,
+#tray,
+#pulseaudio,
+#custom-microphone,
+#language,
+#network,
+#custom-public-ip,
+#custom-awg-gor2,
+#battery,
+#power-profiles-daemon,
+#cpu,
+#temperature,
+#memory,
+#disk,
+#custom-power {
+  background: #${surface};
+  border-radius: 12px;
+  margin: 5px 3px;
+  padding: 0 10px;
+}
+
+#temperature.critical {
+  color: #${red};
+}
+
+#custom-power {
+  color: #${red};
+  padding: 0 12px;
+}
+
+#custom-microphone.live {
+  color: #${green};
+}
+
+#custom-microphone.muted {
+  color: #${red};
+}
+
+#custom-public-ip.offline {
+  color: #${red};
+}
+
+#custom-awg-gor2.connected {
+  color: #${green};
+}
+
+#custom-awg-gor2.disconnected {
+  color: #${red};
+}
+
+#battery.warning {
+  color: #${yellow};
+}
+
+#battery.critical {
+  color: #${red};
+}
+EOF
+
+if [[ "$waybar_mode" == "colorful" ]]; then
+    cat >>"$HOME/.config/waybar/style.css" <<EOF
+
+#clock {
+  color: #${bg};
+  background: #${accent};
+}
+
+#pulseaudio {
+  color: #${bg};
+  background: #${accent2};
+}
+
+#language {
+  color: #${bg};
+  background: #${magenta};
+}
+
+#network,
+#custom-public-ip {
+  color: #${bg};
+  background: #${cyan};
+}
+
+#custom-awg-gor2.connected {
+  color: #${bg};
+  background: #${green};
+}
+
+#custom-awg-gor2.disconnected,
+#custom-public-ip.offline {
+  color: #${bg};
+  background: #${red};
+}
+
+#cpu {
+  color: #${bg};
+  background: #${yellow};
+}
+
+#temperature {
+  color: #${bg};
+  background: #${red};
+}
+
+#memory {
+  color: #${bg};
+  background: #${magenta};
+}
+
+#disk {
+  color: #${bg};
+  background: #${surface2};
+}
+
+#battery {
+  color: #${bg};
+  background: #${green};
+}
+
+#power-profiles-daemon {
+  color: #${bg};
+  background: #${accent2};
+}
+
+#custom-microphone.live {
+  color: #${bg};
+  background: #${green};
+}
+
+#custom-microphone.muted {
+  color: #${bg};
+  background: #${red};
+}
+EOF
+fi
+
+cat >"$HOME/.config/kitty/kitty.conf" <<EOF
+font_family JetBrainsMono Nerd Font
+font_size 12.0
+enable_audio_bell no
+window_padding_width 10
+confirm_os_window_close 0
+
+foreground #${fg}
+background #${bg}
+background_opacity 0.9
+selection_foreground #${bg}
+selection_background #${selection}
+cursor #${selection}
+cursor_text_color #${bg}
+cursor_trail 1
+cursor_trail_decay 0.08 0.18
+
+color0  #${surface2}
+color1  #${red}
+color2  #${green}
+color3  #${yellow}
+color4  #${accent2}
+color5  #${magenta}
+color6  #${cyan}
+color7  #${fg}
+color8  #${muted}
+color9  #${red}
+color10 #${green}
+color11 #${yellow}
+color12 #${accent2}
+color13 #${magenta}
+color14 #${cyan}
+color15 #${muted}
+EOF
+
+cat >"$HOME/.config/fuzzel/fuzzel.ini" <<EOF
+[main]
+font=JetBrainsMono Nerd Font:size=13
+width=42
+lines=12
+horizontal-pad=18
+vertical-pad=12
+inner-pad=10
+terminal=kitty
+
+[colors]
+background=${bg}ff
+text=${fg}ff
+match=${accent}ff
+selection=${surface}ff
+selection-text=${fg}ff
+border=${accent}ff
+
+[border]
+width=2
+radius=14
+EOF
+
+cat >"$HOME/.config/mako/config" <<EOF
+font=JetBrainsMono Nerd Font 11
+background-color=#${bg}
+text-color=#${fg}
+border-color=#${accent}
+border-size=2
+border-radius=12
+padding=14
+default-timeout=5000
+
+[urgency=high]
+border-color=#${red}
+
+[category=microphone-on]
+background-color=#${red}
+text-color=#${bg}
+border-color=#${red}
+EOF
+
+cat >"$HOME/.config/wlogout/style.css" <<EOF
+* {
+  font-family: "JetBrainsMono Nerd Font";
+}
+
+window {
+  background-color: ${bg_rgba};
+}
+
+button {
+  color: #${fg};
+  background-color: #${surface};
+  background-repeat: no-repeat;
+  background-position: center 28px;
+  background-size: 56px;
+  border: 2px solid #${surface2};
+  border-radius: 18px;
+  margin: 16px;
+  padding-top: 92px;
+}
+
+button:focus,
+button:hover {
+  color: #${bg};
+  background-color: #${accent};
+  border-color: #${accent};
+}
+
+#lock {
+  background-image: image(url("/usr/share/wlogout/assets/lock.svg"));
+}
+
+#logout {
+  background-image: image(url("/usr/share/wlogout/assets/logout.svg"));
+}
+
+#shutdown {
+  background-image: image(url("/usr/share/wlogout/assets/shutdown.svg"));
+}
+
+#reboot {
+  background-image: image(url("/usr/share/wlogout/assets/reboot.svg"));
+}
+EOF
+
+cat >"$HOME/.config/swaylock/config" <<EOF
+font=JetBrainsMono Nerd Font
+font-size=18
+color=000000
+indicator-radius=110
+indicator-thickness=8
+inside-color=${bg}ff
+ring-color=${accent}ff
+key-hl-color=${magenta}ff
+bs-hl-color=${red}ff
+separator-color=00000000
+text-color=${fg}ff
+inside-ver-color=${bg}ff
+ring-ver-color=${accent2}ff
+inside-wrong-color=${bg}ff
+ring-wrong-color=${red}ff
+EOF
+
+for gtk_version in gtk-3.0 gtk-4.0; do
+    cat >"$HOME/.config/${gtk_version}/settings.ini" <<EOF
+[Settings]
+gtk-theme-name=adw-gtk3-dark
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Noto Sans 11
+gtk-cursor-theme-name=Adwaita
+gtk-cursor-theme-size=24
+gtk-application-prefer-dark-theme=1
+EOF
+done
+
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' >/dev/null 2>&1 || true
+gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark' >/dev/null 2>&1 || true
+gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' >/dev/null 2>&1 || true
+gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita' >/dev/null 2>&1 || true
+gsettings set org.gnome.desktop.interface cursor-size 24 >/dev/null 2>&1 || true
+gsettings set org.gnome.desktop.interface font-name 'Noto Sans 11' >/dev/null 2>&1 || true
+gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 11' >/dev/null 2>&1 || true
+
+if pgrep -x waybar >/dev/null 2>&1; then
+    pkill -x waybar >/dev/null 2>&1 || true
+    nohup waybar >/dev/null 2>&1 &
+fi
+
+pkill -USR1 mako >/dev/null 2>&1 || true
+
+printf 'Applied %s theme with %s Waybar applets.\n' "$name" "$waybar_mode"

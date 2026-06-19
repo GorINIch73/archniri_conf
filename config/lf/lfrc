@@ -11,6 +11,11 @@ set previewer ~/.config/lf/preview
 set cleaner ~/.config/lf/cleaner
 
 cmd open ${{
+    if [ -f "$f" ] && [ -x "$f" ]; then
+        "$f"
+        exit
+    fi
+
     case "$(file --mime-type -Lb "$f")" in
         text/*|application/json|application/xml)
             nvim "$f"
@@ -43,4 +48,3 @@ map gh cd ~
 map gd cd ~/Downloads
 map gp cd ~/Pictures
 map gc cd ~/.config
-

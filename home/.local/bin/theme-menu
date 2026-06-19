@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if ! command -v fuzzel >/dev/null 2>&1; then
+    notify-send "Theme menu" "fuzzel is not installed" 2>/dev/null || true
+    exit 1
+fi
+
+theme_switch="${HOME}/.local/bin/theme-switch"
+if [[ ! -x "$theme_switch" ]]; then
+    notify-send "Theme menu" "theme-switch is not executable" 2>/dev/null || true
+    exit 1
+fi
+
+selection="$(
+    while IFS= read -r theme; do
+        printf '%s calm\n' "$theme"
+        printf '%s colorful\n' "$theme"
+    done < <("$theme_switch" --list) | fuzzel --dmenu \
+        --prompt='Theme: ' \
+        --only-match \
+        --width=28 \
+        --lines=14
+)" || exit 0
+
+read -r theme waybar_mode <<<"$selection"
+
+"$theme_switch" "$theme" "$waybar_mode"
+notify-send "Theme applied" "$theme $waybar_mode" 2>/dev/null || true

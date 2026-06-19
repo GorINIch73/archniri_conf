@@ -47,6 +47,12 @@ syncthing
 qalculate-gtk
 gnome-disk-utility
 libreoffice-fresh
+gparted
+exfatprogs
+dosfstools
+localsend
+satty
+wf-recorder
 
 # Shell / CLI
 zsh
@@ -64,6 +70,14 @@ fastfetch
 file
 mediainfo
 bat
+trash-cli
+duf
+dust
+ncdu
+eza
+zoxide
+tealdeer
+just
 
 # C++ development
 neovim
@@ -74,6 +88,8 @@ cmake
 ninja
 gdb
 lldb
+shellcheck
+shfmt
 
 # Gaming
 steam

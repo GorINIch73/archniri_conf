@@ -64,7 +64,9 @@ spawn-at-startup "wl-paste" "--type" "text" "--watch" "cliphist" "store"
 spawn-at-startup "wl-paste" "--type" "image" "--watch" "cliphist" "store"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 spawn-at-startup "google-chrome-stable"
+// spawn-at-startup "discord-stable"
 spawn-at-startup "discord"
+spawn-at-startup "Telegram"
 
 prefer-no-csd
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
@@ -99,6 +101,11 @@ window-rule {
 }
 
 window-rule {
+    match app-id=r#"^org.telegram.desktop$"#
+    default-column-width { proportion 0.5; }
+}
+
+window-rule {
     match at-startup=true app-id=r#"^google-chrome$"#
     open-on-workspace "browser"
     open-maximized true
@@ -109,6 +116,11 @@ window-rule {
     open-on-workspace "chat"
 }
 
+window-rule {
+    match at-startup=true app-id=r#"^org.telegram.desktop$"#
+    open-on-workspace "chat"
+}
+
 binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
@@ -116,8 +128,9 @@ binds {
     Mod+D { spawn "fuzzel"; }
     Mod+B { spawn "firefox"; }
     Mod+Shift+B { spawn "google-chrome-stable"; }
-    Mod+Shift+D { spawn "discord"; }
+    Mod+Shift+D { spawn "discord-stable"; }
     Mod+T { spawn-sh "$HOME/.local/bin/next-wallpaper"; }
+    Mod+Shift+T { spawn-sh "$HOME/.local/bin/theme-menu"; }
     Mod+P { spawn-sh "$HOME/.local/bin/clipboard-picker"; }
     Mod+Shift+E { spawn "wlogout"; }
     Super+Alt+L { spawn "swaylock"; }

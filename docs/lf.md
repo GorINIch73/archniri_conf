@@ -17,6 +17,7 @@
 
 ## Opening behavior
 
+- executable files run directly
 - text files open in Neovim
 - images open in `imv`
 - audio/video open in `mpv`
@@ -29,4 +30,3 @@
 - images show metadata for now
 
 Inline image previews can be added later if you decide you want a more visual `lf` workflow inside Kitty.
-
