@@ -1,11 +1,17 @@
 # Core desktop
 niri
 xwayland-satellite
+hyprland
+i3-wm
+xorg-server
+xorg-xinit
 xdg-desktop-portal
 xdg-desktop-portal-gnome
 xdg-desktop-portal-gtk
+xdg-desktop-portal-hyprland
 waybar
 fuzzel
+rofi
 mako
 kitty
 swaybg
@@ -30,7 +36,6 @@ gvfs
 gvfs-smb
 sshfs
 firefox
-wlogout
 nwg-look
 inkscape
 gimp
@@ -45,13 +50,15 @@ keepassxc
 baobab
 syncthing
 qalculate-gtk
+gsimplecal
 gnome-disk-utility
 libreoffice-fresh
 gparted
 exfatprogs
 dosfstools
-localsend
 satty
+tesseract-data-eng
+tesseract-data-rus
 wf-recorder
 
 # Shell / CLI
@@ -83,7 +90,6 @@ just
 neovim
 base-devel
 clang
-clang-tools-extra
 cmake
 ninja
 gdb

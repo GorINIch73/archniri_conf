@@ -6,7 +6,7 @@
 }
 {
     "label" : "logout",
-    "action" : "niri msg action quit",
+    "action" : "~/.local/bin/session-logout",
     "text" : "Logout",
     "keybind" : "e"
 }
@@ -22,4 +22,3 @@
     "text" : "Reboot",
     "keybind" : "r"
 }
-

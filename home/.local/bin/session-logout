@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] || [[ "${XDG_CURRENT_DESKTOP:-}" == *Hyprland* ]]; then
+    exec hyprctl dispatch exit
+fi
+
+if [[ -n "${NIRI_SOCKET:-}" ]] || [[ "${XDG_CURRENT_DESKTOP:-}" == *niri* ]]; then
+    exec niri msg action quit
+fi
+
+notify-send "Logout" "Unsupported desktop session: ${XDG_CURRENT_DESKTOP:-unknown}" 2>/dev/null || true
+exit 1

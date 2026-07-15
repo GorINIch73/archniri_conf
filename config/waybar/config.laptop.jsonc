@@ -10,7 +10,8 @@
     "format": "{index}"
   },
   "clock": {
-    "format": "{:%a %d %b  %H:%M}"
+    "format": "{:%a %d %b  %H:%M}",
+    "on-click": "gsimplecal"
   },
   "pulseaudio": {
     "format": "  {volume}%",

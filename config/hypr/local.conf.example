@@ -1,0 +1,3 @@
+# Copy to ~/.config/hypr/local.conf, add `source = ~/.config/hypr/local.conf`
+# to hyprland.conf, then add machine-specific monitor rules here.
+# monitor = DP-1, 2560x1440@165, 0x0, 1

@@ -13,7 +13,7 @@ This repository is meant to be both a readable record of the system design and a
 
 | Area | Stack |
 | --- | --- |
-| Compositor | `niri` |
+| Compositors / WM | `niri`, `Hyprland`, minimal `i3` fallback |
 | Shell | `zsh`, Oh My Zsh, Powerlevel10k |
 | Editor | `neovim`, `clangd`, Treesitter, Telescope, completion, DAP base |
 | Desktop UI | `waybar`, `fuzzel`, `mako`, `kitty`, `wlogout`, `swaylock` |
@@ -36,6 +36,32 @@ This repository is meant to be both a readable record of the system design and a
 
 ## Fresh install flow
 
+Before running this repo's installer, the fresh Arch system needs the small bootstrap set that the installer itself depends on:
+
+```bash
+sudo pacman -Syu --needed git base-devel sudo
+```
+
+Required before `./setup.sh`:
+
+- `git` to clone this repository, Oh My Zsh, plugins, and `yay-bin` when needed
+- `base-devel` to provide `makepkg` and build AUR packages
+- `sudo` because the scripts install system packages and enable system services
+
+Steam is installed from Arch's `multilib` repository, so `./setup.sh` will fail on `steam` and `steam-devices` if `multilib` is disabled.
+Before running setup, uncomment this block in `/etc/pacman.conf`:
+
+```ini
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+```
+
+Then refresh package databases:
+
+```bash
+sudo pacman -Syu
+```
+
 Run from the repository root:
 
 ```bash
@@ -47,6 +73,7 @@ The root setup script runs the full initial flow:
 | Script | Purpose |
 | --- | --- |
 | `bootstrap.sh` | Installs packages from `packages/pacman.txt` |
+| `install-aur.sh` | Installs packages from `packages/aur.txt` with `yay`/`paru` |
 | `install-zsh-extras.sh` | Installs Powerlevel10k and Oh My Zsh plugins |
 | `link-dotfiles.sh` | Links repo-managed files into `$HOME`, backing up conflicts first |
 | `apply-appearance.sh` | Applies GTK, icon, cursor, and font preferences via `gsettings` |
@@ -56,6 +83,7 @@ It also creates `~/Downloads/Wallpapers`, reloads user systemd units, and enable
 It also enables the per-user `syncthing.service`, so Syncthing starts automatically after login. Open the local web UI at `http://127.0.0.1:8384`.
 
 Packages that are not available in the enabled pacman repositories are tracked separately in `packages/aur.txt`.
+If neither `yay` nor `paru` is installed, `install-aur.sh` bootstraps `yay-bin` first.
 
 During setup, the script asks whether to install optional laptop extras. If selected, it runs `scripts/setup-laptop.sh`, installs laptop-specific packages, switches Waybar to the laptop profile, and enables `power-profiles-daemon`.
 
@@ -67,6 +95,29 @@ After linking configs and logging into niri:
 2. Restart the shell or open a new terminal so Powerlevel10k loads.
 3. Open Neovim once and let plugins install.
 4. In Steam, add per-game launch options as needed from [`docs/gaming.md`](docs/gaming.md).
+
+### Calendar locale
+
+Clicking the clock in Waybar opens `gsimplecal`. Its checked-in configuration uses
+`ru_RU.utf8`, so weeks start on Monday and day and month names are shown in Russian.
+
+On a fresh system, uncomment this line in `/etc/locale.gen`:
+
+```text
+ru_RU.UTF-8 UTF-8
+```
+
+Then generate the locale:
+
+```bash
+sudo locale-gen
+```
+
+Confirm that it is available before opening the calendar:
+
+```bash
+locale -a | grep -i '^ru_RU'
+```
 
 ## Optional laptop profile
 
@@ -89,6 +140,38 @@ Inspect or change the active profile with:
 powerprofilesctl
 powerprofilesctl set power-saver
 ```
+
+## Desktop sessions
+
+The package manifest installs three independent sessions. Select one in the
+display manager before logging in, or start it from a TTY if no display manager
+is installed:
+
+| Session | Type | Purpose |
+| --- | --- | --- |
+| Niri | Wayland | Primary scrolling desktop |
+| Hyprland | Wayland | Fully configured tiling alternative using Waybar |
+| i3 | X11 | Minimal fallback with Kitty and Rofi |
+
+From a TTY, start Hyprland with `start-hyprland` and the minimal i3 session with
+`startx`.
+
+The Hyprland profile starts Waybar, Mako, wallpaper rotation, clipboard history,
+idle locking, NetworkManager's tray applet, and the polkit agent. Its main
+bindings mirror the Niri profile: `Super+Return` opens Kitty, `Super+D` opens
+Fuzzel, `Super+Q` closes a window, and `Super+Shift+E` opens the logout menu.
+
+Hyprland uses automatic monitor configuration by default. For a fixed layout,
+copy `~/.config/hypr/local.conf.example` to `~/.config/hypr/local.conf`, add this
+line to `~/.config/hypr/hyprland.conf`, and then edit the copied monitor rules:
+
+```ini
+source = ~/.config/hypr/local.conf
+```
+
+The i3 profile is intentionally small. `Super+Return` opens Kitty, `Super+D`
+opens Rofi, `Super+Q` closes the focused window, and `Super+Shift+E` exits the
+session. Use `Super+1` through `Super+5` to switch workspaces.
 ## Daily key bindings
 
 | Binding | Action |

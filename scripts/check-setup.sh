@@ -10,7 +10,7 @@ has_cmd() {
 
 echo "Commands"
 for cmd in \
-    niri xwayland-satellite waybar fuzzel mako kitty nvim clangd steam awww \
+    niri xwayland-satellite Hyprland hyprctl i3 startx rofi waybar fuzzel mako kitty nvim clangd steam awww \
     grim slurp wl-copy wl-paste cliphist wlogout swaylock swayidle wpctl \
     notify-send playerctl brightnessctl pavucontrol imv mpv zathura file \
     mediainfo bat fd rg fzf jq curl pgrep gparted mkfs.fat mkfs.exfat \
@@ -29,7 +29,10 @@ echo
 echo "Linked config"
 for path in \
     "$HOME/.config/niri/config.kdl" \
+    "$HOME/.config/hypr/hyprland.conf" \
+    "$HOME/.config/i3/config" \
     "$HOME/.config/waybar/config.jsonc" \
+    "$HOME/.config/waybar/config.hyprland.jsonc" \
     "$HOME/.config/waybar/style.css" \
     "$HOME/.config/fuzzel/fuzzel.ini" \
     "$HOME/.config/mako/config" \
