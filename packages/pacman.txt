@@ -61,6 +61,9 @@ tesseract-data-eng
 tesseract-data-rus
 wf-recorder
 
+# Install LocalSend's indicator dependency before the AUR stage.
+libayatana-indicator
+
 # Shell / CLI
 zsh
 git
