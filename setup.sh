@@ -18,20 +18,27 @@ run_user_systemctl() {
     fi
 }
 
+ask_optional_setup() {
+    local prompt="$1"
+    local script="$2"
+    local answer=""
+
+    echo
+    read -r -p "$prompt [y/N] " answer || true
+    case "${answer,,}" in
+        y|yes) run_step "$prompt" "$ROOT_DIR/scripts/$script" ;;
+    esac
+}
+
 run_step "Installing packages" "$ROOT_DIR/scripts/bootstrap.sh"
 run_step "Installing AUR packages" "$ROOT_DIR/scripts/install-aur.sh"
 run_step "Installing zsh extras" "$ROOT_DIR/scripts/install-zsh-extras.sh"
 run_step "Linking dotfiles" "$ROOT_DIR/scripts/link-dotfiles.sh"
 run_step "Applying appearance settings" "$ROOT_DIR/scripts/apply-appearance.sh"
 
-echo
-install_laptop=""
-read -r -p "Install laptop extras (battery status and power management)? [y/N] " install_laptop || true
-case "${install_laptop,,}" in
-    y|yes)
-        run_step "Installing laptop extras" "$ROOT_DIR/scripts/setup-laptop.sh"
-        ;;
-esac
+ask_optional_setup "Install laptop extras (battery status and power management)?" "setup-laptop.sh"
+ask_optional_setup "Set up Samba file sharing?" "setup-samba.sh"
+ask_optional_setup "Set up printer support (CUPS)?" "setup-printers.sh"
 
 run_step "Preparing wallpaper directory" mkdir -p "$HOME/Downloads/Wallpapers"
 

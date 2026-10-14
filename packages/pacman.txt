@@ -1,5 +1,4 @@
 # Core desktop
-niri
 xwayland-satellite
 hyprland
 i3-wm
@@ -14,6 +13,8 @@ fuzzel
 rofi
 mako
 kitty
+zellij
+tmux
 swaybg
 awww
 swaylock

@@ -16,7 +16,7 @@ This repository is meant to be both a readable record of the system design and a
 | Compositors / WM | `niri`, `Hyprland`, minimal `i3` fallback |
 | Shell | `zsh`, Oh My Zsh, Powerlevel10k |
 | Editor | `neovim`, `clangd`, Treesitter, Telescope, completion, DAP base |
-| Desktop UI | `waybar`, `fuzzel`, `mako`, `kitty`, `wlogout`, `swaylock` |
+| Desktop UI | `waybar`, `fuzzel`, `mako`, `kitty`, `zellij`, `wlogout`, `swaylock` |
 | Appearance | Catppuccin-like palette, `adw-gtk3-dark`, `Papirus-Dark`, `Adwaita` cursors |
 | Utilities | `lf`, `mc`, clipboard history, screenshots, wallpaper rotation |
 | Gaming | Steam, GameMode, MangoHud, Gamescope helpers |
@@ -117,7 +117,25 @@ Wait for plugin installation to finish and restart Neovim. If `E492` persists,
 check `:messages` for startup errors and `:echo $MYVIMRC` for the loaded config
 path; an old configuration is only one possible cause.
 
-During setup, the script asks whether to install optional laptop extras. If selected, it runs `scripts/setup-laptop.sh`, installs laptop-specific packages, switches Waybar to the laptop profile, and enables `power-profiles-daemon`.
+During setup, the script asks whether to install optional laptop extras, Samba,
+and printer support. Each is opt-in; selecting one runs its corresponding
+helper script.
+
+## Optional Samba and printer setup
+
+Samba file sharing and CUPS printing are optional and are not installed by the
+desktop bootstrap. Run the relevant helper from the repository root:
+
+```bash
+./scripts/setup-samba.sh
+./scripts/setup-printers.sh
+```
+
+The Samba helper installs Samba and starts `smb.service`; it prints the steps
+for defining shares and adding Samba credentials. The printer helper installs
+CUPS, its filters, the printer setup GUI, and Avahi for local network discovery,
+then starts the corresponding services. Both helpers leave system configuration
+and firewall rules for you to review and configure.
 
 ## First login checklist
 
@@ -132,6 +150,8 @@ After linking configs and logging into niri:
 
 Clicking the clock in Waybar opens `gsimplecal`. Its checked-in configuration uses
 `ru_RU.utf8`, so weeks start on Monday and day and month names are shown in Russian.
+The Waybar launcher runs the calendar at 2× GTK scale so it is easier to read;
+the scale is limited to the calendar window.
 
 On a fresh system, uncomment this line in `/etc/locale.gen`:
 
@@ -204,6 +224,56 @@ source = ~/.config/hypr/local.conf
 The i3 profile is intentionally small. `Super+Return` opens Kitty, `Super+D`
 opens Rofi, `Super+Q` closes the focused window, and `Super+Shift+E` exits the
 session. Use `Super+1` through `Super+5` to switch workspaces.
+## Kitty tabs and Zellij sessions
+
+Kitty is the terminal emulator; its tabs keep separate terminal windows inside
+one Kitty window. The config provides these tab shortcuts:
+
+| Shortcut | Action |
+| --- | --- |
+| `Ctrl+Shift+T` | Open a tab in the current directory |
+| `Ctrl+Shift+W` | Close the current tab |
+| `Ctrl+Shift+Left/Right` | Move between tabs |
+| `Alt+1` … `Alt+9` | Select tab 1 … 9 |
+
+Zellij runs inside a Kitty tab and adds persistent sessions, panes, and its own
+tabs. Start it with `zellij`; it creates a session and shows available shortcuts
+in its status bar. Common defaults:
+
+| Keys | Action |
+| --- | --- |
+| `Ctrl+P`, then `N` | Open a pane |
+| `Ctrl+P`, then arrow key | Move focus between panes |
+| `Ctrl+P`, then `D` | Close the focused pane |
+| `Ctrl+T`, then `N` | Open a Zellij tab |
+| `Ctrl+T`, then `1`–`9` | Switch to a Zellij tab |
+| `Ctrl+O`, then `D` | Detach and keep the session running |
+| `zellij attach` | Reopen the most recent detached session |
+
+Zellij uses the default keybinding preset, so press the mode key first, then the
+action key. Its config uses `wl-copy` for clipboard copying and Neovim to inspect
+scrollback. The checked-in configs are linked by `./scripts/link-dotfiles.sh`.
+
+### tmux
+
+tmux is another terminal multiplexer, with a long-running session model that is
+useful over SSH and on servers. Start it with `tmux`; detach with `Ctrl+B`, then
+`D`, and reconnect with `tmux attach`. This config keeps the standard `Ctrl+B`
+prefix. Press the prefix and then:
+
+| Keys | Action |
+| --- | --- |
+| `C` | Open a window in the current directory |
+| `%` | Split the current pane left and right |
+| `-` | Split the current pane top and bottom |
+| Arrow key | Move between panes (mouse clicks also work) |
+| `R` | Reload `~/.tmux.conf` |
+
+Each action follows `Ctrl+B`; for example, split vertically with `Ctrl+B`, then
+`%`. Run `tmux ls` to list sessions and `tmux attach -t NAME` to attach to one.
+The config is tracked at [`home/.tmux.conf`](home/.tmux.conf) and linked by the
+dotfiles linker.
+
 ## Daily key bindings
 
 | Binding | Action |

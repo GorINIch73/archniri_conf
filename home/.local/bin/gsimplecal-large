@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# gsimplecal has no window-size option. Run this GTK app at 2x scale in XWayland
+# without changing the scale of other GTK applications.
+exec env GDK_BACKEND=x11 GDK_SCALE=2 gsimplecal "$@"

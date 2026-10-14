@@ -1,4 +1,5 @@
 # Packages not available in the enabled pacman repositories on this machine.
+niri-git
 localsend-bin
 ventoy-bin
 wlogout

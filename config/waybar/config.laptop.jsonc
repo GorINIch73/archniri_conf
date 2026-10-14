@@ -11,7 +11,7 @@
   },
   "clock": {
     "format": "{:%a %d %b  %H:%M}",
-    "on-click": "gsimplecal"
+    "on-click": "$HOME/.local/bin/gsimplecal-large"
   },
   "pulseaudio": {
     "format": "  {volume}%",

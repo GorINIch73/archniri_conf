@@ -10,7 +10,7 @@ has_cmd() {
 
 echo "Commands"
 for cmd in \
-    niri xwayland-satellite Hyprland hyprctl i3 startx rofi waybar fuzzel mako kitty nvim clangd steam awww \
+    niri xwayland-satellite Hyprland hyprctl i3 startx rofi waybar fuzzel mako kitty zellij tmux nvim clangd steam awww \
     grim slurp wl-copy wl-paste cliphist wlogout swaylock swayidle wpctl \
     notify-send playerctl brightnessctl pavucontrol imv mpv zathura file \
     mediainfo bat fd rg fzf jq curl pgrep gparted mkfs.fat mkfs.exfat \
@@ -37,6 +37,8 @@ for path in \
     "$HOME/.config/fuzzel/fuzzel.ini" \
     "$HOME/.config/mako/config" \
     "$HOME/.config/kitty/kitty.conf" \
+    "$HOME/.config/zellij/config.kdl" \
+    "$HOME/.tmux.conf" \
     "$HOME/.config/nvim/init.lua" \
     "$HOME/.zshrc" \
     "$HOME/.p10k.zsh"
@@ -61,6 +63,7 @@ for path in \
     "$HOME/.local/bin/toggle-microphone" \
     "$HOME/.local/bin/public-ip-status" \
     "$HOME/.local/bin/awg-gor2-status" \
+    "$HOME/.local/bin/gsimplecal-large" \
     "$HOME/.local/bin/lfcd"
 do
     if [[ -x "$path" ]]; then

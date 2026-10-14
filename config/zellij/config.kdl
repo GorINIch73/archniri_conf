@@ -1,0 +1,7 @@
+// Keep Zellij's built-in keybindings so its modes remain easy to learn.
+// Wayland clipboard integration for copied text.
+copy_command "wl-copy"
+copy_on_select false
+mouse_mode true
+pane_frames true
+scrollback_editor "nvim"
