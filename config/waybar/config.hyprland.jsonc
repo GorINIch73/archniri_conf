@@ -3,6 +3,7 @@
   "position": "top",
   "height": 34,
   "spacing": 8,
+  "reload_style_on_change": true,
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
   "modules-right": ["tray", "pulseaudio", "custom/microphone", "hyprland/language", "network", "custom/public-ip", "custom/awg-gor2", "cpu", "memory", "disk", "custom/power"],

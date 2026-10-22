@@ -196,3 +196,6 @@ binds {
     Mod+Alt+D { focus-workspace "chat"; }
     Mod+Alt+G { focus-workspace "games"; }
 }
+
+// Generated from the current wallpaper by update-niri-wallpaper-theme.
+include optional=true "wallpaper-theme.kdl"

@@ -1,24 +1,24 @@
 {
     "label" : "lock",
     "action" : "swaylock",
-    "text" : "Lock",
+    "text" : "Заблокировать",
     "keybind" : "l"
 }
 {
     "label" : "logout",
     "action" : "~/.local/bin/session-logout",
-    "text" : "Logout",
+    "text" : "Выйти из сеанса",
     "keybind" : "e"
 }
 {
     "label" : "shutdown",
     "action" : "systemctl poweroff",
-    "text" : "Shutdown",
+    "text" : "Выключить",
     "keybind" : "s"
 }
 {
     "label" : "reboot",
     "action" : "systemctl reboot",
-    "text" : "Reboot",
+    "text" : "Перезагрузить",
     "keybind" : "r"
 }

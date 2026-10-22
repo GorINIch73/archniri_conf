@@ -77,8 +77,31 @@ case "$theme" in
         accent="268bd2"; accent2="2aa198"; selection="fdf6e3"
         red="dc322f"; green="859900"; yellow="b58900"; cyan="2aa198"; magenta="d33682"
         ;;
+    wallpaper)
+        name="Wallpaper"
+        wallpaper="${WALLPAPER_IMAGE:-${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper/current}"
+        if [[ -z "${WALLPAPER_IMAGE:-}" && -f "$wallpaper" ]]; then
+            wallpaper="$(<"$wallpaper")"
+        fi
+        if [[ ! -f "$wallpaper" ]]; then
+            printf 'Current wallpaper not found: %s\n' "$wallpaper" >&2
+            exit 1
+        fi
+        palette="${WALLPAPER_PALETTE:-}"
+        if [[ -z "$palette" ]]; then
+            palette_tool="$HOME/.local/bin/wallpaper-palette"
+            if [[ ! -x "$palette_tool" ]]; then
+                script_dir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+                palette_tool="$script_dir/wallpaper-palette"
+            fi
+            palette="$("$palette_tool" "$wallpaper")"
+        fi
+        read -r bg surface surface2 fg muted accent accent2 selection <<< "$palette"
+        bg_rgba="rgba($((16#${bg:0:2})), $((16#${bg:2:2})), $((16#${bg:4:2})), 0.90)"
+        red="f38ba8"; green="a6e3a1"; yellow="f9e2af"; cyan="94e2d5"; magenta="f5c2e7"
+        ;;
     list|--list|-l)
-        printf '%s\n' mocha graphite rose forest nord dracula tokyo gruvbox solarized
+        printf '%s\n' mocha graphite rose forest nord dracula tokyo gruvbox solarized wallpaper
         exit 0
         ;;
     modes|--modes)
@@ -87,7 +110,7 @@ case "$theme" in
         ;;
     *)
         printf 'Unknown theme: %s\n' "$theme" >&2
-        printf 'Available themes: mocha graphite rose forest nord dracula tokyo gruvbox solarized\n' >&2
+        printf 'Available themes: mocha graphite rose forest nord dracula tokyo gruvbox solarized wallpaper\n' >&2
         exit 1
         ;;
 esac
@@ -343,7 +366,8 @@ EOF
 
 cat >"$HOME/.config/wlogout/style.css" <<EOF
 * {
-  font-family: "JetBrainsMono Nerd Font";
+  font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+  font-size: 16px;
 }
 
 window {
@@ -354,12 +378,14 @@ button {
   color: #${fg};
   background-color: #${surface};
   background-repeat: no-repeat;
-  background-position: center 28px;
-  background-size: 56px;
-  border: 2px solid #${surface2};
+  background-position: center 18px;
+  background-size: 38px;
+  border: 1px solid #${surface2};
   border-radius: 18px;
-  margin: 16px;
-  padding-top: 92px;
+  min-width: 108px;
+  min-height: 118px;
+  margin: 6px;
+  padding: 62px 12px 12px;
 }
 
 button:focus,
@@ -383,6 +409,18 @@ button:hover {
 
 #reboot {
   background-image: image(url("/usr/share/wlogout/assets/reboot.svg"));
+}
+
+#shutdown:hover,
+#shutdown:focus {
+  background-color: #${red};
+  border-color: #${red};
+}
+
+#reboot:hover,
+#reboot:focus {
+  background-color: #${yellow};
+  border-color: #${yellow};
 }
 EOF
 
@@ -423,11 +461,6 @@ gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita' >/dev/null 2>&1
 gsettings set org.gnome.desktop.interface cursor-size 24 >/dev/null 2>&1 || true
 gsettings set org.gnome.desktop.interface font-name 'Noto Sans 11' >/dev/null 2>&1 || true
 gsettings set org.gnome.desktop.interface monospace-font-name 'JetBrainsMono Nerd Font 11' >/dev/null 2>&1 || true
-
-if pgrep -x waybar >/dev/null 2>&1; then
-    pkill -x waybar >/dev/null 2>&1 || true
-    nohup waybar >/dev/null 2>&1 &
-fi
 
 pkill -USR1 mako >/dev/null 2>&1 || true
 

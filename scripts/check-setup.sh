@@ -51,12 +51,32 @@ do
 done
 
 echo
+echo "Zsh theme"
+if [[ -f "$HOME/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+    ok "Oh My Zsh Powerlevel10k theme installed"
+else
+    warn "Oh My Zsh Powerlevel10k theme"
+fi
+if [[ -L "$HOME/.zshrc" || -f "$HOME/.zshrc" ]] && grep -q '^ZSH_THEME="powerlevel10k/powerlevel10k"$' "$HOME/.zshrc"; then
+    ok "Powerlevel10k selected in ~/.zshrc"
+else
+    warn "Powerlevel10k selected in ~/.zshrc"
+fi
+if [[ -L "$HOME/.p10k.zsh" || -f "$HOME/.p10k.zsh" ]]; then
+    ok "Powerlevel10k prompt settings linked"
+else
+    warn "Powerlevel10k prompt settings"
+fi
+
+echo
 echo "User scripts"
 for path in \
     "$HOME/.local/bin/theme-switch" \
     "$HOME/.local/bin/theme-menu" \
     "$HOME/.local/bin/discord-stable" \
     "$HOME/.local/bin/next-wallpaper" \
+    "$HOME/.local/bin/update-niri-wallpaper-theme" \
+    "$HOME/.local/bin/wallpaper-palette" \
     "$HOME/.local/bin/clipboard-picker" \
     "$HOME/.local/bin/screenshot" \
     "$HOME/.local/bin/microphone-status" \

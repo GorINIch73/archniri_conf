@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if (( $# != 1 )) || [[ ! -f "$1" ]]; then
+    printf 'Usage: wallpaper-palette IMAGE\n' >&2
+    exit 2
+fi
+
+if ! command -v magick >/dev/null 2>&1; then
+    printf 'ImageMagick (magick) is required to derive wallpaper colors.\n' >&2
+    exit 1
+fi
+
+palette="$(magick "$1" -resize 96x96\! -colors 12 -depth 8 -format %c histogram:info:-)"
+python3 -c '
+import colorsys
+import re
+import sys
+
+entries = []
+for line in sys.stdin:
+    match = re.search(r"\s*(\d+):\s*\(\s*(\d+),\s*(\d+),\s*(\d+)\s*\).*?#([0-9A-Fa-f]{6})", line)
+    if not match:
+        continue
+    count = int(match.group(1))
+    rgb = tuple(int(match.group(i)) / 255 for i in (2, 3, 4))
+    hue, lightness, saturation = colorsys.rgb_to_hls(*rgb)
+    score = count * (0.35 + saturation) * (0.35 + min(lightness, 1 - lightness))
+    entries.append((score, hue, saturation))
+
+if not entries:
+    raise SystemExit("Could not extract a color from the wallpaper")
+
+_, hue, saturation = max(entries)
+if saturation < 0.12:
+    hue, saturation = 0.64, 0.56
+else:
+    saturation = max(0.55, min(0.80, saturation))
+
+def hex_color(hue, lightness, saturation):
+    rgb = colorsys.hls_to_rgb(hue % 1, lightness, saturation)
+    return "".join(f"{round(channel * 255):02x}" for channel in rgb)
+
+print(
+    hex_color(hue, 0.105, saturation * 0.35),
+    hex_color(hue, 0.18, saturation * 0.35),
+    hex_color(hue, 0.27, saturation * 0.38),
+    "f2f2f5",
+    "a6adc8",
+    hex_color(hue, 0.68, saturation),
+    hex_color(hue + 0.10, 0.72, saturation),
+    hex_color(hue + 0.72, 0.86, saturation * 0.22),
+)
+' <<< "$palette"

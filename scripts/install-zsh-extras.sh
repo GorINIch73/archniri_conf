@@ -36,4 +36,5 @@ install_or_update https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
 install_or_update https://github.com/zsh-users/zsh-autosuggestions "$AUTOSUGGESTIONS_DIR"
 install_or_update https://github.com/zsh-users/zsh-syntax-highlighting.git "$SYNTAX_HIGHLIGHTING_DIR"
 
-echo "Powerlevel10k and zsh plugins are ready."
+echo "Oh My Zsh, the Powerlevel10k theme, and zsh plugins are ready."
+echo "The linked ~/.zshrc selects Powerlevel10k and loads ~/.p10k.zsh."

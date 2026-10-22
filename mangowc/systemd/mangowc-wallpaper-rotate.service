@@ -1,0 +1,8 @@
+[Unit]
+Description=Rotate MangoWC wallpaper through Noctalia
+After=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/mango/scripts/next-wallpaper
+

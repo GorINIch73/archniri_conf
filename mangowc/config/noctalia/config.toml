@@ -1,0 +1,37 @@
+[theme]
+mode = "dark"
+shell_mode = "dark"
+source = "wallpaper"
+wallpaper_scheme = "vibrant"
+sync_color_scheme = true
+
+[bar.default]
+position = "top"
+reserve_space = true
+layer = "top"
+thickness = 40
+background_opacity = 0.18
+compositor_blur = true
+margin_ends = 12
+margin_edge = 8
+widget_spacing = 8
+capsule = true
+capsule_fill = "surface_variant"
+capsule_radius = 14
+capsule_opacity = 0.82
+capsule_border = "outline"
+capsule_border_width = 1.0
+start = ["workspaces", "active_window"]
+center = ["media"]
+end = ["keyboard_layout", "network", "volume", "clock", "control-center", "settings", "session"]
+shadow = false
+contact_shadow = false
+
+[widget.workspaces]
+style = "focus_hint"
+
+[widget.clock]
+format = "{:%a %d · %H:%M}"
+
+[shell.panel]
+shadow = false

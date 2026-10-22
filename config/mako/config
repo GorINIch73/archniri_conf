@@ -1,7 +1,7 @@
 font=JetBrainsMono Nerd Font 11
-background-color=#1e1e2e
-text-color=#cdd6f4
-border-color=#cba6f7
+background-color=#221913
+text-color=#f2f2f5
+border-color=#ef9b6c
 border-size=2
 border-radius=12
 padding=14
@@ -12,5 +12,5 @@ border-color=#f38ba8
 
 [category=microphone-on]
 background-color=#f38ba8
-text-color=#1e1e2e
+text-color=#221913
 border-color=#f38ba8

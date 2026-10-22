@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Let Noctalia own the wallpaper library, current selection, palette update,
+# and display transition. Configure the library directory in Noctalia Settings.
+exec noctalia msg wallpaper-random

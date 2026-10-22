@@ -38,3 +38,12 @@ awww img "$next" \
     --transition-fps 60
 
 printf '%s\n' "$next" > "$STATE_FILE"
+
+theme_helper="$HOME/.local/bin/update-niri-wallpaper-theme"
+if [[ ! -x "$theme_helper" ]]; then
+    script_dir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+    theme_helper="$script_dir/update-niri-wallpaper-theme"
+fi
+if [[ -x "$theme_helper" ]]; then
+    "$theme_helper" "$next"
+fi

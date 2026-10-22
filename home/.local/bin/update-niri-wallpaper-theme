@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+wallpaper="${1:-${XDG_STATE_HOME:-$HOME/.local/state}/wallpaper/current}"
+if [[ -f "$wallpaper" && $# -eq 0 ]]; then
+    wallpaper="$(<"$wallpaper")"
+fi
+
+if [[ ! -f "$wallpaper" ]]; then
+    printf 'Wallpaper not found: %s\n' "$wallpaper" >&2
+    exit 1
+fi
+
+script_dir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+palette_tool="$HOME/.local/bin/wallpaper-palette"
+if [[ ! -x "$palette_tool" ]]; then
+    palette_tool="$script_dir/wallpaper-palette"
+fi
+palette="$("$palette_tool" "$wallpaper")"
+read -r _ _ _ _ _ color_a color_b _ <<< "$palette"
+
+config_dir="$HOME/.config/niri"
+mkdir -p "$config_dir"
+cat >"$config_dir/wallpaper-theme.kdl" <<EOF
+layout {
+    focus-ring {
+        active-gradient from="$color_a" to="$color_b" angle=45
+        inactive-color "#6c7086"
+    }
+}
+EOF
+
+theme_switch="$HOME/.local/bin/theme-switch"
+if [[ ! -x "$theme_switch" ]]; then
+    theme_switch="$script_dir/theme-switch"
+fi
+if [[ -x "$theme_switch" ]]; then
+    WALLPAPER_IMAGE="$wallpaper" WALLPAPER_PALETTE="$palette" \
+        "$theme_switch" wallpaper calm
+fi

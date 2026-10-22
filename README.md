@@ -79,6 +79,10 @@ The root setup script runs the full initial flow:
 | `apply-appearance.sh` | Applies GTK, icon, cursor, and font preferences via `gsettings` |
 | `check-setup.sh` | Prints a quick health report for the configured workstation |
 
+The fresh install links `home/.zshrc` and `home/.p10k.zsh` after installing
+Oh My Zsh and Powerlevel10k. The shell therefore selects and configures the
+Powerlevel10k Oh My Zsh theme automatically when you open a new Zsh terminal.
+
 It also creates `~/Downloads/Wallpapers`, reloads user systemd units, and enables `wallpaper-rotate.timer`.
 It also enables the per-user `syncthing.service`, so Syncthing starts automatically after login. Open the local web UI at `http://127.0.0.1:8384`.
 
@@ -308,7 +312,7 @@ theme-switch mocha
 theme-switch dracula colorful
 ```
 
-Available themes: `mocha`, `graphite`, `rose`, `forest`, `nord`, `dracula`, `tokyo`, `gruvbox`, `solarized`.
+Available themes: `mocha`, `graphite`, `rose`, `forest`, `nord`, `dracula`, `tokyo`, `gruvbox`, `solarized`, and `wallpaper` (derived from the current wallpaper).
 
 Waybar applets can stay calm or become more colorful:
 
@@ -326,7 +330,7 @@ theme-menu
 
 In niri, open it with `Super+Shift+T`.
 
-The switcher updates Waybar, Kitty, fuzzel, mako, wlogout, swaylock, and GTK settings. `scripts/apply-appearance.sh` accepts the same theme name and defaults to `mocha calm`.
+The switcher updates Waybar, Kitty, fuzzel, mako, wlogout, swaylock, and GTK settings. Waybar watches its stylesheet for changes, so theme switches update its colors without restarting the bar. `scripts/apply-appearance.sh` accepts the same theme name and defaults to `mocha calm`.
 
 ## Wallpaper rotation
 
@@ -336,7 +340,7 @@ Wallpapers are read from:
 ~/Downloads/Wallpapers
 ```
 
-Rotation is handled by `awww` and a user systemd timer. The timer changes wallpaper every 5 minutes; `Super+T` triggers the same script immediately.
+Rotation is handled by `awww` and a user systemd timer. The timer changes wallpaper every 5 minutes; `Super+T` triggers the same script immediately. In niri, each wallpaper change derives a palette and updates the focus-ring gradient, Waybar, Kitty, Fuzzel, Mako, wlogout, and swaylock. Niri watches `~/.config/niri/wallpaper-theme.kdl` and applies the focus-ring colors automatically; Waybar watches its stylesheet, and other app settings are applied by `theme-switch`. Run `theme-switch wallpaper` to apply a palette from the current wallpaper without changing it.
 
 Idle behavior is intentionally simple: the session locks after 10 minutes of inactivity, and no automatic suspend is configured.
 

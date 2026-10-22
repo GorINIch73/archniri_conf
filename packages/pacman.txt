@@ -43,6 +43,7 @@ gimp
 imv
 loupe
 imagemagick
+cups
 mpv
 file-roller
 zathura

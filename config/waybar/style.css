@@ -5,8 +5,8 @@
 }
 
 window#waybar {
-  background: rgba(30, 30, 46, 0.88);
-  color: #cdd6f4;
+  background: rgba(34, 25, 19, 0.90);
+  color: #f2f2f5;
 }
 
 #workspaces button {
@@ -18,8 +18,8 @@ window#waybar {
 }
 
 #workspaces button.active {
-  color: #1e1e2e;
-  background: #cba6f7;
+  color: #221913;
+  background: #ef9b6c;
 }
 
 #window,
@@ -38,7 +38,7 @@ window#waybar {
 #memory,
 #disk,
 #custom-power {
-  background: #313244;
+  background: #3b2a21;
   border-radius: 12px;
   margin: 5px 3px;
   padding: 0 10px;
